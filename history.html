@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史记录</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/vant.css">
+    <script src="./js/vue3.js"></script>
+    <script src="./js/vant.min.js"></script>
+    <script src="./js/axiois.min.js"></script>
+    <script src="./js/request.js"></script>
+    <script src="./js/ballinfo.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 页面结构示例 -->
+        <div class="container">
+            <!-- 开奖信息卡片 -->
+            <div class="card animate-fade-in">
+                <div class="card-header">
+                    <div class="f-center pointer" @click="handleChooseYear">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        <span class="tti">{{ year }}(选择年份)</span>
+                    </div>
+                    <div class="his pointer" @click="handleBack">返回</div>
+                </div>
+                <div class="card-body" v-if="!loading">
+                    <div class="grid">
+                        <div class="grid-item animate-fade-in" v-for="item in list" :key="item.issue">
+                            <h3 class="issue">第{{ item.issue }}期 [{{ item.date }}]</h3>
+                            <div class="num">
+                                <div v-for="o in item.nums.slice(0, 6)" :key="item" class="num-s" :class="ball(o).color">
+                                    <div>{{ o }}</div>
+                                    <div class="info">{{ ball(o).animal }}/{{ ball(o).property }}</div>
+                                </div>
+                                <div class="num-s plus">+</div>
+                                <div class="num-s" :class="ball(s_num(item.nums)).color">
+                                    <div>{{ s_num(item.nums) }}</div>
+                                    <div class="info">{{ ball(s_num(item.nums)).animal }}/{{ ball(s_num(item.nums)).property }}</div>
+                                </div>
+                            </div>
+                            <div class="tag-group">
+                                <span class="tag">特码: {{ s_num(item.nums) }}</span>
+                                <span class="status success">已截止</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else class="loading">加载中...</div>
+            </div>
+        </div>
+        <van-action-sheet v-model:show="show" :actions="actions" @select="onSelect" />
+    </div>
+    <script>
+        const { createApp, ref, computed } = Vue
+        const app = createApp({
+            setup() {
+                const loading = ref(true)
+                const show = ref(false)
+                const list = ref([])
+                const year = ref(new Date().getFullYear())
+                const actions = ref([])
+                const setActions = () => {
+                    actions.value = new Array(5).fill('').map((o, i) => ({ name: year.value - i }))
+                }
+                setActions()
+                const handleBack = () => {
+                    window.location.href = './index.html'
+                }
+                const ball = (num) => {
+                    const n = num * 1
+                    const info = BallInfo[n] || {}
+                    return info
+                }
+                const s_num = (nums) => {
+                    return nums[nums.length - 1] * 1
+                }
+                const handleChooseYear = () => {
+                    show.value = true
+                }
+                
+                const getData = async () => {
+                    list.value = []
+                    loading.value = true
+                    const { res } = await GET(`/api/getaomenhistory`, { params: { year: year.value } })
+                    loading.value = false
+                    if (res) {
+                        list.value = res
+                    }
+                }
+                const onSelect = (v) => {
+                    year.value = v.name
+                    show.value = false
+                    getData()
+                }
+                getData()
+                return {
+                    year,
+                    list,
+                    loading,
+                    show,
+                    actions,
+                    onSelect,
+                    ball,
+                    s_num,
+                    handleChooseYear,
+                    handleBack
+                }
+            }
+        })
+        app.use(vant)
+        app.mount('#app')
+    </script>
+</body>
+</html>

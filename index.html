@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最新开奖信息</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <script src="./js/vue3.js"></script>
+    <script src="./js/axiois.min.js"></script>
+    <script src="./js/request.js"></script>
+    <script src="./js/ballinfo.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 页面结构示例 -->
+        <div class="container">
+            <!-- 开奖信息卡片 -->
+            <div class="card animate-fade-in">
+                <div class="card-header">
+                    <div class="f-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        <span class="tti">最新开奖信息</span>
+                    </div>
+                    <div class="his" @click="handleJump">历史记录</div>
+                </div>
+                <div class="card-body" v-if="info.issue">
+                    <div class="grid">
+                        <div class="grid-item animate-fade-in">
+                            <h3 class="issue">第{{ info.issue }}期</h3>
+                            <div class="num">
+                                <div v-for="(item, i) in info.open_num.slice(0, info.open_num.length - 1)" :key="item" class="num-s" :class="ball(item).color">
+                                    <div>{{ item }}</div>
+                                    <div class="info">{{ ball(item).animal }}/{{ ball(item).property }}</div>
+                                </div>
+                                <div class="num-s plus">+</div>
+                                <div class="num-s" :class="ball(s_num).color">
+                                    <div>{{ s_num }}</div>
+                                    <div class="info">{{ ball(s_num).animal }}/{{ ball(s_num).property }}</div>
+                                </div>
+                            </div>
+                            <div class="tag-group">
+                                <span class="tag">特码: {{ s_num }}</span>
+                                <span class="status success">已截止</span>
+                            </div>
+                        </div>
+                        <div class="grid-item animate-fade-in">
+                            <h3 class="issue">第{{ info.next_issue }}期</h3>
+                            <h3 class="next-issue">
+                                <div>{{ count }}</div>
+                                <div>&nbsp;&nbsp;&nbsp;&nbsp; [{{ time }}]</div>
+                            </h3>
+                            <div class="tag-group">
+                                <span class="tag">特码: 待开</span>
+                                <span class="status warning">待开</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else class="loading">加载中...</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const { createApp, ref, computed } = Vue
+        const app = createApp({
+            setup() {
+                const info = ref({
+                    open_num: []
+                })
+                const loading = ref(false)
+                const count = ref('')
+                const time = computed(() => {
+                    const next_time = info.value.next_time
+                    if (!next_time) return ''
+                    const t = new Date(next_time)
+                    return `${t.getFullYear()}-${t.getMonth() + 1}-${t.getDate()} ${t.getHours()}时${t.getMinutes()}分`
+                })
+                const s_num = computed(() => info.value.open_num[info.value.open_num.length - 1])
+                const setCount = () => {
+                    const { next_time } = info.value
+                    if (next_time) {
+                        const dd = +new Date()
+                        const c = next_time - dd
+                        let str = ''
+                        if (c > 0) {
+                            const ss = Math.floor(c / 1000)
+                            const second = ss % 60
+                            const mins = Math.floor(ss / 60) % 60
+                            const hours = Math.floor(ss / 60 / 60)
+                            const zero = (num) => `${num > 9 ? '' : '0'}${num}`
+                            str = `${zero(hours)}:${zero(mins)}:${zero(second)}`
+                        } else {
+                            str = '已开奖，请刷新页面'
+                        }
+                        count.value = str
+                    }
+                }
+                const ball = (num) => {
+                    const n = num * 1
+                    const info = BallInfo[n] || {}
+                    return info
+                }
+                const handleJump = () => {
+                    window.location.href = './history.html'
+                }
+                const getData = async () => {
+                    loading.value = true
+                    const { res } = await GET('/api/getaomen')
+                    loading.value = false
+                    if (res) {
+                        info.value = res
+                        setCount()
+                    }
+                }
+                getData()
+                setInterval(() => {
+                    setCount()
+                }, 1000)
+                return { info, time, count, s_num, loading, ball, handleJump }
+            }
+        })
+        app.mount('#app')
+    </script>
+</body>
+</html>

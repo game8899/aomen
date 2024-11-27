@@ -191,13 +191,13 @@ body {
     text-align: center;
 }
 .num .num-s.red {
-    background: linear-gradient(red, #f7c9c9);
+    background: linear-gradient(#f74040, #f7c9c9);
 }
 .num .num-s.blue {
-    background: linear-gradient(blue, #c2c2fb);
+    background: linear-gradient(#4c4cfa, #c2c2fb);
 }
 .num .num-s.green {
-    background: linear-gradient(green, #cef5ce);
+    background: linear-gradient(#4dfa4d, #cef5ce);
 }
 .num .num-s.plus {
     color: #888;

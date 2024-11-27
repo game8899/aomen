@@ -45,12 +45,6 @@ img {
     padding: 20px; /* 增加内边距 */
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 16px; /* 在小屏幕上减少内边距 */
-    }
-}
-
 /* 内容卡片组件 */
 .card {
     background: #fff;
@@ -87,7 +81,7 @@ img {
 .card-header .his {
     font-size: 0.875rem;
     cursor: pointer;
-    color: #fdbb2d;
+    color: #fff;
     transition: color 0.3s ease;
 }
 
@@ -106,7 +100,7 @@ img {
 }
 /* 卡片内容 */
 .card-body {
-    padding: 10px;
+    padding: 14px;
 }
 
 .badge {
@@ -123,14 +117,17 @@ img {
 .tag-group {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 12px; /* 增加标签之间的间距 */
     margin: 10px 0;
 }
 
 .tag {
-    padding: 8px 16px;
+    height: 30px;
+    line-height: 28px;
+    padding: 0 14px;
     border-radius: 20px;
-    font-size: 1rem;
+    font-size: 14px;
     color: #fff;
     background: linear-gradient(45deg, #11998e, #38ef7d);
     transition: all 0.3s ease;
@@ -143,18 +140,16 @@ img {
 
 /* 数据网格布局 */
 .grid {
-    display: grid;
     gap: 20px; /* 加大网格项间距 */
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 自适应网格项 */
-    margin: 20px 0;
 }
 
 .grid-item {
     background: #fff;
-    padding: 16px;
+    padding: 14px;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     transition: box-shadow 0.3s ease;
+    margin: 10px 0;
 }
 
 .grid-item:hover {
@@ -227,26 +222,40 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.25rem; /* 增大数字的字体 */
+    font-size: 16px; /* 增大数字的字体 */
     font-weight: bold;
     margin: 12px 0;
 }
 
 .num .num-s {
-    margin: 0 6px;
+    margin: 0 3px;
     color: #fff;
     border-radius: 6px;
-    padding: 0 8px;
+    padding: 0 4px 4px;
     text-align: center;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+    transition: all 0.3s ease;
 }
 .num .num-s.red {
-    background: linear-gradient(#f74040, #f7c9c9);
+    background: linear-gradient(180deg, #FF6B6B, #FFB6B6);
+}
+.num .num-s.red:hover {
+    background: linear-gradient(180deg, #FF4C4C, #FF9999);
+    transform: scale(1.05);
 }
 .num .num-s.blue {
-    background: linear-gradient(#4c4cfa, #c2c2fb);
+    background: linear-gradient(180deg, #4A90E2, #A5A9F3);
+}
+.num .num-s.blue:hover {
+    background: linear-gradient(180deg, #357ABD, #D0D4F9);
+    transform: scale(1.05);
 }
 .num .num-s.green {
-    background: linear-gradient(#4dfa4d, #cef5ce);
+    background: linear-gradient(180deg, #28B463, #A3E4D7);
+}
+.num .num-s.green:hover {
+    background: linear-gradient(180deg, #229F53, #C5E7DB);
+    transform: scale(1.05);
 }
 .num .num-s.plus {
     color: #888;
@@ -274,4 +283,16 @@ img {
     left: 50%;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0px; /* 在小屏幕上减少内边距 */
+    }
+    .card-body {
+        padding: 4px;
+    }
+    .grid-item {
+        padding: 8px 4px;
+    }
 }

@@ -236,26 +236,17 @@ img {
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
     transition: all 0.3s ease;
 }
-.num .num-s.red {
-    background: linear-gradient(180deg, #FF6B6B, #FFB6B6);
-}
-.num .num-s.red:hover {
-    background: linear-gradient(180deg, #FF4C4C, #FF9999);
+.num .num-s:hover {
     transform: scale(1.05);
+}
+.num .num-s.red {
+    background: #FF4C4C;
 }
 .num .num-s.blue {
-    background: linear-gradient(180deg, #4A90E2, #A5A9F3);
-}
-.num .num-s.blue:hover {
-    background: linear-gradient(180deg, #357ABD, #D0D4F9);
-    transform: scale(1.05);
+    background: #357ABD;
 }
 .num .num-s.green {
-    background: linear-gradient(180deg, #28B463, #A3E4D7);
-}
-.num .num-s.green:hover {
-    background: linear-gradient(180deg, #229F53, #C5E7DB);
-    transform: scale(1.05);
+    background: #229F53;
 }
 .num .num-s.plus {
     color: #888;
